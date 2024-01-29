@@ -1,1 +1,5 @@
-console.log("Hi am amal");
+import dotenv  from 'dotenv'
+
+dotenv.config()
+
+console.log(process.env.ON_PRODUCTION);
