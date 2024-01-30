@@ -1,19 +1,39 @@
 import cors from "cors";
-import express, { Application, Request, Response } from "express";
-import { connectToDatabase, getDatabase } from "./database";
+import express, { Application } from "express";
+import { connectToDatabase } from "./database";
+import nocache from 'nocache'
+import env from 'dotenv'
+import delegateRoute from "../src/routes/DelegateRoute"
 
 class Server {
-  constructor() {
+  private app: Application;
+  private port: number;
+
+  constructor( port: any, app: express.Application) {
+    this.app = app;
+    this.port = port;
+    connectToDatabase()
     
-    const app: Application = express();
-    const port = process.env.PORT || 3000;
-    app.use(express.json());
+    this.intializeMiddlewares()
+    this.initialiseRoutes();
   }
 
-  runServer(){
-    app.listen(port, () => {
-        console.log(`Server is running on http://localhost:${port}`);
-      });
+  private intializeMiddlewares() : void {
+    this.app.use(nocache()) 
+    this.app.use(cors());
+    this.app.use(express.json());
+    this.app.use(express.urlencoded({ extended: false }));
   }
 
+  private initialiseRoutes():void{
+    this.app.use('/delegate',delegateRoute)
+  }
+
+  public runServer() : void {
+    this.app.listen(this.port, () => {
+      console.log(`Server is running on http://localhost:${this.port}`);
+    });
+  }
 }
+
+export default Server

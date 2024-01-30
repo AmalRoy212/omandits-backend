@@ -1,5 +1,11 @@
-import dotenv  from 'dotenv'
+import express, { Application }  from "express";
+import Server from '../configs/server';
+import env from 'dotenv';
 
-dotenv.config()
+const app : Application = express();
+env.config();
 
-console.log(process.env.ON_PRODUCTION);
+
+const server = new Server(  process.env.PORT || 3000 ,app );
+server.runServer()
+
