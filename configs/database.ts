@@ -5,10 +5,11 @@ let database: Db | null = null;
 
 export const connectToDatabase = async (): Promise<void> => {
   try {
-    const client = await MongoClient.connect(process.env.MONGODB_URI || 'mongodb://localhost:27017');
-
+    const client = await MongoClient.connect( process.env.MONGODB_URI || 'mongodb://localhost:27017');
+    console.log(process.env.MONGODB_URI);
+    
     database = client.db();
-    console.log('Connected to the database');
+    console.log('Connected to the database', database);
   } catch (error) {
     console.error('Error connecting to the database:', error);
     process.exit(1);
